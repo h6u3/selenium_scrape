@@ -11,7 +11,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
-import time
+#import time
 
 lichess = [
            ['https://lichess.org/stat/rating/distribution/ultraBullet', 0],
@@ -114,7 +114,7 @@ def scrape_chesscom():
     return C_overall_stat
 
 def scrape():
-    start_time = time.time()
+    #start_time = time.time()
     lichess_stat = scrape_lichess()
     chesscom_stat = scrape_chesscom()
     driver.close()
@@ -125,7 +125,7 @@ def scrape():
                        'C_total members': [chesscom_stat[0]], 'C_players online': [chesscom_stat[1]], 'C_bullet': [chesscom[C_BULLET][PLAYER_COUNT]], 'C_blitz': [chesscom[C_BLITZ][PLAYER_COUNT]], 'C_rapid': [chesscom[C_RAPID][PLAYER_COUNT]], 'C_daily': [chesscom[C_DAILY][PLAYER_COUNT]], 'C_daily960': [chesscom[C_CHESS960][PLAYER_COUNT]]})
     print(df)
     df.to_csv('scrape_per_hour.csv', mode='a', index=False, header=False)
-    print("--- %s seconds ---" % (time.time() - start_time))
+    #print("--- %s seconds ---" % (time.time() - start_time))
 
 def main(): 
     #scrape()
