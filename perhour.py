@@ -7,7 +7,7 @@ from selenium.common.exceptions import NoSuchElementException as NSEE
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import TimeoutException
 from datetime import datetime, timedelta
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
@@ -131,7 +131,7 @@ def main():
     #scrape()
     now = datetime.now()
     next_hour = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
-    sched = BlockingScheduler()
+    sched = BackgroundScheduler()
     sched.add_job(scrape, 'interval', hours=1, next_run_time=next_hour)
     sched.start()
 
