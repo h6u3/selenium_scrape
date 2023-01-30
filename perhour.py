@@ -7,7 +7,7 @@ from selenium.common.exceptions import NoSuchElementException as NSEE
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import TimeoutException
 from datetime import datetime, timedelta
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
@@ -117,26 +117,27 @@ def scrape():
     #start_time = time.time()
     lichess_stat = scrape_lichess()
     chesscom_stat = scrape_chesscom()
-    driver.close()
+    #driver.close()
     date = datetime.today().strftime('%d-%m-%Y')
     time = datetime.now().strftime('%H:%M')
     df = pd.DataFrame({'Date': [date], 'Time': [time], 
                        'L_logged-in': [lichess_stat[0]], 'L_games in progress': [lichess_stat[1]], 'L_ultra bullet': [lichess[L_U_BULLET][PLAYER_COUNT]], 'L_bullet': [lichess[L_BULLET][PLAYER_COUNT]], 'L_blitz': [lichess[L_BLITZ][PLAYER_COUNT]], 'L_rapid': [lichess[L_RAPID][PLAYER_COUNT]], 'L_classical': [lichess[L_CLASSICAL][PLAYER_COUNT]], 'L_chess960': [lichess[L_CHESS960][PLAYER_COUNT]], 
                        'C_total members': [chesscom_stat[0]], 'C_players online': [chesscom_stat[1]], 'C_bullet': [chesscom[C_BULLET][PLAYER_COUNT]], 'C_blitz': [chesscom[C_BLITZ][PLAYER_COUNT]], 'C_rapid': [chesscom[C_RAPID][PLAYER_COUNT]], 'C_daily': [chesscom[C_DAILY][PLAYER_COUNT]], 'C_daily960': [chesscom[C_CHESS960][PLAYER_COUNT]]})
     print(df)
-    df.to_csv('scrape_per_hour.csv', mode='a', index=False, header=False)
+    df.to_csv('scrape_per_hour_test.csv', mode='a', index=False, header=False)
     #print("--- %s seconds ---" % (time.time() - start_time))
 
 def main(): 
-    #scrape()
+    scrape()
     now = datetime.now()
-    next_hour = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
-    sched = BackgroundScheduler()
-    sched.add_job(scrape, 'interval', hours=1, next_run_time=next_hour)
+    #next_hour = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
+    sched = BlockingScheduler()
+    #sched.add_job(scrape, 'interval', hours=1, next_run_time=next_hour)
+    sched.add_job(scrape, 'interval', hours=1)
     sched.start()
 
-now = datetime.now()
-next_hour = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
-print("The program will run from this time: ", next_hour.strftime("%H:%M"))
+#now = datetime.now()
+#next_hour = now.replace(minute=0, second=0, microsecond=0) + timedelta(hours=1)
+#print("The program will run from this time: ", next_hour.strftime("%H:%M"))
 
 main()
